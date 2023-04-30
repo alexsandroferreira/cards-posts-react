@@ -4,78 +4,49 @@ import './App.css'
 
 
 class App extends React.Component {
-  // state com Class components
-  constructor(props) {
-    super(props);
-    this.state = {
-      posts: [
-        {
-          id: 1,
-          title: 'Alexsandro',
-          body: 'Homem de 31 anos, Buscando se desenvolver em programação'
-        },
-        {
-          id: 2,
-          title: 'João',
-          body: 'Homem de 31 anos, Buscando se desenvolver em programação'
-        },
-        {
-          id: 3,
-          title: 'Carlos',
-          body: 'Homem de 31 anos, Buscando se desenvolver em programação'
-        }
-      ]
-    };
+  state = {
+    posts: []
+  };
+
+  componentDidMount() {
+    this.loadPosts();
+  }
+
+  loadPosts = async () => {
+    const postResponse = fetch('https://jsonplaceholder.typicode.com/posts');
+    const photosResponse = fetch('https://jsonplaceholder.typicode.com/photos');
+
+    const [posts, photos] = await Promise.all([postResponse, photosResponse]);
+
+    const postsJason = await posts.json();
+    const photosJason = await photos.json();
+
+    const potosAndPhotos = postsJason.map((post, index) =>{
+      return{...post, cover: photosJason[index].url}
+    })
+    this.setState({ posts: potosAndPhotos })
   }
 
   render() {
     const { posts } = this.state;
     return (
-    <div className='App'>
-      {posts.map(post => (
-        <div key={post.id}>
-          <h1>{post.title}</h1>
-          <p>{post.body}</p>
+      <section className='container'>
+        <div className='posts'>
+          {posts.map(post => (
+            <div className="post">
+              <img src={post.cover} alt={post.title} />
+              <div key={post.id} className='post-content'>
+                <h1>{post.title}</h1>
+                <p>{post.body}</p>
+              </div>
+            </div>
+          ))}
         </div>
-      ))}
-    </div>
+      </section>
+
     )
   }
 }
 
 export default App;
-// export default function App() {
-
-
-
-//   state = {
-//     posts: []
-//   }
-
-
-
-//   loadPosts = async () => {
-//     fetch('https://jsonplaceholder.typicode.com/posts')
-//       .then(reponse => Response.json())
-//       .then(posts => this.setState({ posts }))
-//   }
-
-//   return (
-
-
-//     <>
-//       <div>
-//         {posts.map(post => (
-//           <div key={post.id}>
-//             <h1>{post.title}</h1>
-//             <p>{post.body}</p>
-//           </div>
-//         ))}
-//       </div>
-
-//     </>
-
-//   )
-// }
-
 
