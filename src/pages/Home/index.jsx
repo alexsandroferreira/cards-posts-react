@@ -1,11 +1,11 @@
 import React, { Component, useState } from 'react'
 
-import './App.css'
-import { PostCard } from './componets/PostCard';
-import { loadPosts } from './utils/load-post'
-import { Posts } from './componets/Posts';
+import './styles.css'
 
-class App extends React.Component {
+import { loadPosts } from '../../utils/load-post'
+import { Posts } from '../../componets/Posts';
+
+class Home extends React.Component {
   state = {
     posts: []
   };
@@ -30,5 +30,5 @@ class App extends React.Component {
   }
 }
 
-export default App;
+export default Home;
 
