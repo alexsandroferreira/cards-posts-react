@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react'
+import React, { Component, useCallback, useEffect, useState } from 'react'
 
 import './styles.css'
 
@@ -7,100 +7,93 @@ import { Posts } from '../../componets/Posts';
 import { PostButton } from '../../componets/PostButton';
 import { PostInputText } from '../../componets/PostInputText';
 
-class Home extends React.Component {
-  state = {
-    posts: [],
-    allPosts: [],
-    page: 0,
-    postsPerPage: 2,
-    searchValue: ''
-  };
+ function Home() {
 
-  async componentDidMount() {
-    await this.loadPosts();
-  }
+  const [posts, setPosts] = useState([]);
+  const [allPosts, setallPosts] = useState([]);
+  const [page, setPage] = useState(0);
+  const [postsPerPage] = useState(3);
+  const [searchValue, setSearchValue] = useState('');
 
-  loadPosts = async () => {
-    const { page, postsPerPage } = this.state;
+  const noMorePosts = page + postsPerPage >= allPosts.length;
+
+  const handleLoadPosts = useCallback(async (page, postsPerPage) => {
 
     const postosAndPhotos = await loadPosts();
-    this.setState({
-      posts: postosAndPhotos.slice(page, postsPerPage),
-      allPosts: postosAndPhotos,
-    })
-  }
 
-  loadMorePosts = () => {
-    const {
-      page,
-      postsPerPage,
-      allPosts,
-      posts
-    } = this.state
+
+    setPosts(postosAndPhotos.slice(page, postsPerPage))
+    setallPosts(postosAndPhotos)
+  },[])
+
+
+  useEffect(() => {
+    handleLoadPosts(0, postsPerPage);
+  }, [handleLoadPosts, postsPerPage])
+
+  const loadMorePosts = () => {
+
     const nextPage = page + postsPerPage;
     const nextPosts = allPosts.slice(nextPage, nextPage + postsPerPage);
     posts.push(...nextPosts)
 
-    this.setState({ posts, page: nextPage })
+
+    setPosts(posts)
+    setPage(nextPage)
   }
 
-  handleChange = (e) => {
+  const handleChange = (e) => {
     const { value } = e.target;
-    this.setState({ searchValue: value })
+    setSearchValue(value)
 
   }
 
-  render() {
-    const { posts, page, postsPerPage, allPosts, searchValue } = this.state;
-    const noMorePosts = page + postsPerPage >= allPosts.length;
-
-    const filteredPosts = !!searchValue ?
-      allPosts.filter(post => {
-        return post.title.toLowerCase().includes(
-          searchValue.toLowerCase()
-        );
-      })
-      : posts;
+  const filteredPosts = !!searchValue ?
+    allPosts.filter(post => {
+      return post.title.toLowerCase().includes(
+        searchValue.toLowerCase()
+      );
+    })
+    : posts;
 
 
-    console.log("value" + filteredPosts)
+  return (
+    <section className='container'>
+      <div className="search-content">
+        {!!searchValue && (
+          <h1>Search value: {searchValue}</h1>
 
-    return (
-      <section className='container'>
-        <div className="search-content">
-          {!!searchValue && (
-            <h1>Search value: {searchValue}</h1>
+        )}
+        <PostInputText
+          searchValue={searchValue}
+          handleChange={handleChange}
+        />
+      </div>
 
-          )}
-          <PostInputText
-            searchValue={searchValue}
-            handleChange={this.handleChange}
+      {filteredPosts.length > 0 && (
+        <Posts posts={filteredPosts} />
+      )}
+
+      {filteredPosts.length === 0 && (
+        <p>Não existe Post com esse Titúlo</p>
+      )}
+
+      <div className="button-container">
+        {!searchValue && (
+          <PostButton
+            disabled={noMorePosts}
+            text='Load More Posts'
+            onClick={loadMorePosts}
           />
-        </div>
-
-        {filteredPosts.length > 0 && (
-          <Posts posts={filteredPosts} />
         )}
 
-        {filteredPosts.length === 0 && (
-          <p>Não existe Post com esse Titúlo</p>
-        )}
+      </div>
+    </section>
 
-        <div className="button-container">
-          {!searchValue && (
-            <PostButton
-              disabled={noMorePosts}
-              text='Load More Posts'
-              onClick={this.loadMorePosts}
-            />
-          )}
-
-        </div>
-      </section>
-
-    )
-  }
+  )
 }
+
+
 
 export default Home;
 

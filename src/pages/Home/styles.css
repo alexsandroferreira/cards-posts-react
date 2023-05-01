@@ -10,7 +10,6 @@
   min-height: 6rem;
   display: flex;
   align-items: flex-end;
-  border: 1px solid red;
 }
 
 .search-content {
