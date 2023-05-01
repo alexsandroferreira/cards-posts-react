@@ -4,10 +4,14 @@ import './styles.css'
 
 import { loadPosts } from '../../utils/load-post'
 import { Posts } from '../../componets/Posts';
+import { PostButton } from '../../componets/PostButton';
 
 class Home extends React.Component {
   state = {
-    posts: []
+    posts: [],
+    allPosts: [],
+    page: 0,
+    postsPerPage: 2
   };
 
   async componentDidMount() {
@@ -15,15 +19,36 @@ class Home extends React.Component {
   }
 
   loadPosts = async () => {
+    const { page, postsPerPage } = this.state;
     const postosAndPhotos = await loadPosts();
-    this.setState({ posts: postosAndPhotos })
+    this.setState({
+      posts: postosAndPhotos.slice(page, postsPerPage),
+      allPosts: postosAndPhotos
+    })
+  }
+
+  loadMorePosts = () => {
+    const {
+      page,
+      postsPerPage,
+      allPosts,
+      posts
+    } = this.state
+    const nextPage = page + postsPerPage;
+    const nextPosts = allPosts.slice(nextPage, nextPage + postsPerPage);
+    posts.push(...nextPosts)
+
+    this.setState({posts, page: nextPage})
   }
 
   render() {
     const { posts } = this.state;
     return (
       <section className='container'>
-        <Posts posts={posts}/>
+        <Posts posts={posts} />
+        <PostButton
+          text='Load More Posts'
+          onClick={this.loadMorePosts} />
       </section>
 
     )
