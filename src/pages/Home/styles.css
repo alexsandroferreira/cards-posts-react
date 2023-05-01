@@ -1,13 +1,22 @@
-.container{
+.container {
   max-width: 1200px;
-  margin:0 auto;
-  min-width: 100vh;
+  margin: 0 auto;
+  min-height: 100vh;
   background: #eee;
   padding: 1.5rem;
 }
+
 .button-container {
   min-height: 6rem;
   display: flex;
   align-items: flex-end;
   border: 1px solid red;
+}
+
+.search-content {
+  margin-bottom: 2rem;
+}
+
+.search-content h1 {
+  margin-bottom: 2rem;
 }

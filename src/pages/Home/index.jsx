@@ -5,6 +5,7 @@ import './styles.css'
 import { loadPosts } from '../../utils/load-post'
 import { Posts } from '../../componets/Posts';
 import { PostButton } from '../../componets/PostButton';
+import { PostInputText } from '../../componets/PostInputText';
 
 class Home extends React.Component {
   state = {
@@ -54,34 +55,34 @@ class Home extends React.Component {
     const noMorePosts = page + postsPerPage >= allPosts.length;
 
     const filteredPosts = !!searchValue ?
-    allPosts.filter(post => {
-      return post.title.toLowerCase().includes(
-        searchValue.toLowerCase()
-      );
-    })
-    : posts;
+      allPosts.filter(post => {
+        return post.title.toLowerCase().includes(
+          searchValue.toLowerCase()
+        );
+      })
+      : posts;
 
-      
-      console.log("value"+ filteredPosts)
+
+    console.log("value" + filteredPosts)
 
     return (
       <section className='container'>
-        {!!searchValue && (
-          <>
-            <h1>Search value: {searchValue}</h1><br />
-          </>
-        )}
-        <input
-          value={searchValue}
-          onChange={this.handleChange}
-          type="search"
-        /> <br /><br /><br />
+        <div className="search-content">
+          {!!searchValue && (
+            <h1>Search value: {searchValue}</h1>
+
+          )}
+          <PostInputText
+            searchValue={searchValue}
+            handleChange={this.handleChange}
+          />
+        </div>
 
         {filteredPosts.length > 0 && (
           <Posts posts={filteredPosts} />
         )}
 
-        {filteredPosts.length === 0 &&(
+        {filteredPosts.length === 0 && (
           <p>Não existe Post com esse Titúlo</p>
         )}
 
