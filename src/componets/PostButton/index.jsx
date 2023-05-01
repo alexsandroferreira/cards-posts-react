@@ -1,6 +1,9 @@
-export function PostButton({ text, onClick }) {
+import './styles.css'
+export function PostButton({ text, onClick,disabled }) {
     return (
-        <button onClick={onClick}>
+        <button className='post-button' 
+        disabled={disabled}
+        onClick={onClick}>
             {text}
         </button>
     )

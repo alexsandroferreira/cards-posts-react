@@ -11,7 +11,7 @@ class Home extends React.Component {
     posts: [],
     allPosts: [],
     page: 0,
-    postsPerPage: 2
+    postsPerPage: 10
   };
 
   async componentDidMount() {
@@ -38,17 +38,22 @@ class Home extends React.Component {
     const nextPosts = allPosts.slice(nextPage, nextPage + postsPerPage);
     posts.push(...nextPosts)
 
-    this.setState({posts, page: nextPage})
+    this.setState({ posts, page: nextPage })
   }
 
   render() {
-    const { posts } = this.state;
+    const { posts,page, postsPerPage, allPosts} = this.state;
+    const noMorePosts = page + postsPerPage >= allPosts.length;
     return (
       <section className='container'>
         <Posts posts={posts} />
-        <PostButton
-          text='Load More Posts'
-          onClick={this.loadMorePosts} />
+
+        <div className="button-container">
+          <PostButton
+          disabled={noMorePosts}
+            text='Load More Posts'
+            onClick={this.loadMorePosts} />
+        </div>
       </section>
 
     )

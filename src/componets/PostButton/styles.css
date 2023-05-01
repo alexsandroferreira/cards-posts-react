@@ -1,0 +1,13 @@
+.post-button{
+    width: 100%;
+    background: darkblue;
+    color:#fff;
+    border:none;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+}
+
+button:disabled{
+    background: #888;
+    cursor: not-allowed;
+}
